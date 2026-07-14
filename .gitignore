@@ -1,0 +1,3 @@
+source_repos/
+*.log
+.DS_Store

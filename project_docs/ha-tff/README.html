@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>README</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* Specific adjustments for markdown content */
+        .md-content {
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            margin-top: 2rem;
+        }
+        .md-content img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 2rem auto;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+        .md-content pre {
+            background-color: #0d1117;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+        }
+        .md-content code {
+            font-family: var(--font-mono);
+        }
+        .nav-back {
+            margin-bottom: 2rem;
+            display: inline-block;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container fade-up">
+        <a href="../../index.html" class="nav-back">&larr; Back to Archive</a>
+        <div class="md-content">
+            <h1>HA-TFF: Hardware-Accelerated Telemetry Firewall</h1>
+<h2>1. What It Is</h2>
+<p>HA-TFF is a pure-RTL, line-rate packet classification and telemetry firewall targeting FPGA platforms. It is designed to filter 10GbE IPv4 TCP/UDP traffic using exact-match rules while tracking detailed hardware-level telemetry via an AXI4-Lite interface.</p>
+<h2>2. The Architecture</h2>
+<pre><code class="language-mermaid">flowchart LR
+    A[10GbE MAC] --&gt;|512-bit AXI4-Stream| B(Combinatorial Parser)
+    B --&gt; C{Cuckoo Hash Engine}
+    C --&gt;|4-way BRAM Lookup| D[Exact Matcher]
+    D --&gt; E[Decision Logic]
+    E --&gt; F[Telemetry Stats]
+    E --&gt; G[Output MAC]
+    
+    H[CPU / AXI4-Lite] -.-&gt; C
+    H -.-&gt; F
+</code></pre>
+<p>The system operates on a 512-bit wide AXI4-Stream bus, allowing the entire 42-byte Eth/IPv4/UDP header stack to be parsed combinatorially on the first clock cycle. The 104-bit 5-tuple is extracted and fed into a cryptographic XOR-Fold hash engine, which indexes 4 parallel BRAM blocks to execute Cuckoo Hashing lookups in <code>O(1)</code> time.</p>
+<h2>3. Key Features</h2>
+<ul>
+<li><strong>Zero-DSP Footprint:</strong> Relies purely on LUTs and BRAMs to ensure cross-platform compatibility without DSP slice consumption.</li>
+<li><strong>16-Cycle Exact Match:</strong> The datapath utilizes an exact 16-cycle pipeline depth (including delay lines) to perfectly align parsing, hashing, and decision assertion.</li>
+<li><strong>Hardware Telemetry:</strong> Zero-latency statistics collection (stalls, drops, bytes) integrated into the datapath without violating timing constraints.</li>
+</ul>
+<h2>4. Performance Results</h2>
+<ul>
+<li><strong>Timing Closure:</strong> 156.25 MHz (6.4ns period) on Xilinx Artix-7 (<code>xc7a100tfgg484-1</code>).</li>
+<li><strong>Throughput:</strong> Capable of sustaining line-rate 100GbE processing given the 6.72ns inter-packet arrival budget.</li>
+</ul>
+<h2>5. How to Reproduce</h2>
+<pre><code class="language-bash">git clone https://github.com/Ganeshkumara26/ha-tff.git
+cd ha-tff
+make sim-icarus   # Run the Icarus Verilog testbench
+make synth-vivado # Run Vivado synthesis for Artix-7
+</code></pre>
+
+        </div>
+    </div>
+</body>
+</html>

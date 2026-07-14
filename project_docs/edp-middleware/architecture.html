@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>architecture</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* Specific adjustments for markdown content */
+        .md-content {
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            margin-top: 2rem;
+        }
+        .md-content img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 2rem auto;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+        .md-content pre {
+            background-color: #0d1117;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+        }
+        .md-content code {
+            font-family: var(--font-mono);
+        }
+        .nav-back {
+            margin-bottom: 2rem;
+            display: inline-block;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container fade-up">
+        <a href="../../index.html" class="nav-back">&larr; Back to Archive</a>
+        <div class="md-content">
+            <h1>Architectural Design Specification: EDP Middleware</h1>
+<h2>1. The Monolithic Bottleneck in Cyber-Physical Systems</h2>
+<p>Historically, embedded robotic stacks (like legacy UAV firmware) tightly coupled hardware drivers (UART/SPI) with application-layer protocols (MAVLink, Custom Telemetry). This paradigm results in an <code>O(N^2)</code> scaling complexity when integrating new transport methods or new protocols. Furthermore, monolithic architectures rely heavily on moving raw payloads via <code>memcpy()</code> across internal boundaries, incurring massive latency penalties at high bandwidths on constrained ARM Cortex processors.</p>
+<h2>2. Interface Polymorphism in Pure C</h2>
+<p>To resolve the coupling bottleneck, the Embedded Design Platform (EDP) is designed as a middleware abstraction layer. Rather than using C++ and incurring the overhead of runtime virtual table (<code>vtable</code>) lookups, EDP utilizes static struct function pointers and CMake macro definitions to achieve polymorphism.</p>
+<p>The core transport layer accepts abstract byte streams from any hardware driver (UART, UDP). The protocol parsing logic is injected at compile time (e.g., <code>EDP_BUILD_PROTOCOL_MAVLINK</code>). This allows the middleware to be strictly application-agnostic while retaining the extreme performance of purely static C11 execution.</p>
+<h2>3. Zero-Copy IPC and Shared Memory</h2>
+<p>The primary architectural innovation of the EDP Core is its Inter-Process Communication (IPC) bridge to the user-space daemon (Meghadut). </p>
+<p>When a packet is parsed from the transport layer, the payload is placed into a pre-allocated, deterministic memory block. Instead of copying this payload across the IPC boundary to the user space via traditional POSIX sockets or pipes, EDP passes a <em>pointer</em> to the memory block using a highly synchronized Ring Buffer.</p>
+<h2>4. Concurrency via Lock-Free Atomics</h2>
+<p>A shared memory ring buffer typically requires strict mutex synchronization to prevent race conditions between the producer (hardware interrupt) and the consumer (user daemon). However, standard POSIX mutexes force context switches into the kernel, ruining the deterministic real-time guarantees required for flight controllers.</p>
+<p>EDP resolves this by replacing mutexes with <strong>Lock-Free Atomics</strong> (<code>stdatomic.h</code>). The read and write indices of the IPC ring buffers are managed using Compare-And-Swap (CAS) atomic operations. This ensures that the hot path never blocks, yielding deterministic, bounded execution times in <code>O(1)</code> memory allocations.</p>
+<h2>5. Integration and Topography</h2>
+<p>EDP is packaged as a statically linked library (<code>edp_core.a</code>). This prevents the execution delays of dynamic linking payloads on embedded Linux systems. The integration topography relies strictly on CMake dependency graphs to map the hardware abstraction headers to the user&#39;s specific board support package (BSP).</p>
+
+        </div>
+    </div>
+</body>
+</html>

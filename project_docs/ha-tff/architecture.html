@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>architecture</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* Specific adjustments for markdown content */
+        .md-content {
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            margin-top: 2rem;
+        }
+        .md-content img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 2rem auto;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+        .md-content pre {
+            background-color: #0d1117;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+        }
+        .md-content code {
+            font-family: var(--font-mono);
+        }
+        .nav-back {
+            margin-bottom: 2rem;
+            display: inline-block;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container fade-up">
+        <a href="../../index.html" class="nav-back">&larr; Back to Archive</a>
+        <div class="md-content">
+            <h1>Architectural Design Specification: HA-TFF</h1>
+<h2>1. Physical Constraints and the 100GbE Bottleneck</h2>
+<p>The fundamental architectural driver for the Hardware-Accelerated Telemetry Firewall (HA-TFF) is the 6.72 nanosecond inter-packet arrival time inherent to 100 Gigabit Ethernet (100GbE) operating at line rate with minimum-size (64-byte) frames. General-purpose CPUs, even with high-end DPDK frameworks, suffer from context-switching and memory-access latencies that far exceed this budget.</p>
+<h2>2. AXI4-Stream parsing and the 512-bit Data Bus</h2>
+<p>To meet the latency requirement, HA-TFF relies on a 512-bit wide AXI4-Stream data bus. This width is deliberate: a standard IPv4/TCP header stack fits within 42 bytes (336 bits). Therefore, the entire critical header payload is guaranteed to arrive on the first clock edge of the transaction.</p>
+<p>This permits a purely combinatorial parsing approach in <code>ha_tff_parser.v</code>. Rather than utilizing a state machine to step through the packet byte-by-byte, the 104-bit 5-tuple (Source IP, Dest IP, Source Port, Dest Port, Protocol) is extracted using direct wire routing on the first cycle.</p>
+<h2>3. Cryptographic Hashing and Cuckoo Collision Resolution</h2>
+<p>Once extracted, the 104-bit tuple is passed to <code>ha_tff_hash.v</code>. A naive TCAM (Ternary Content-Addressable Memory) approach was rejected due to excessive power consumption and high cost on mid-range FPGAs. Conversely, a distributed LUTRAM linked-list hash table fails the bounded timing constraints required for line-rate processing.</p>
+<p>Instead, HA-TFF utilizes <strong>Cuckoo Hashing</strong>:</p>
+<ol>
+<li>A Keyed XOR-Fold hashing algorithm maps the 104-bit tuple to four independent 12-bit addresses.</li>
+<li>These addresses index four parallel XPM BRAM blocks (<code>ha_tff_bram_bank.v</code>).</li>
+<li>The four resulting 128-bit records are evaluated simultaneously in <code>ha_tff_matcher.v</code> against the extracted tuple.</li>
+</ol>
+<p>This guarantees <code>O(1)</code> lookup latency at the cost of dedicating 48 BRAM blocks. The use of a 128-bit runtime secret key ensures the hashing distribution resists hash-flooding algorithmic complexity attacks.</p>
+<h2>4. Pipeline Synchronization and Telemetry</h2>
+<p>The core datapath operates on a strict 16-cycle delay line (<code>axi_stream_delay_line.v</code>). While the parser and hash tables require 16 cycles to compute the firewall rule assertion (pass/drop), the original 512-bit AXI4-Stream packet is shifted through a parallel FIFO. The mathematical assertion of the exact-match decision arrives precisely aligned with the first word of the delayed payload.</p>
+<p>Telemetry (stalls, dropped bytes) is collected via <code>ha_tff_performance_monitor.v</code> in zero-latency by tapping into the AXI handshaking signals (<code>tvalid</code>, <code>tready</code>), ensuring observability without impacting the critical path to the output MAC.</p>
+<h2>5. Timing Closure</h2>
+<p>The RTL was explicitly designed without relying on dedicated DSP slices, ensuring the multiplication and folding steps fit cleanly into standard CLB structures. Pipelined registers isolate the deep combinatorial paths of the XOR-Folding hash, resulting in successful timing closure at 156.25 MHz (6.4ns) on Xilinx Artix-7 fabric.</p>
+
+        </div>
+    </div>
+</body>
+</html>

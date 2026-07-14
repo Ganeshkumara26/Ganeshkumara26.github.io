@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>01_the_mode_that_never_corrects_itself</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* Specific adjustments for markdown content */
+        .md-content {
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            margin-top: 2rem;
+        }
+        .md-content img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 2rem auto;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+        .md-content pre {
+            background-color: #0d1117;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+        }
+        .md-content code {
+            font-family: var(--font-mono);
+        }
+        .nav-back {
+            margin-bottom: 2rem;
+            display: inline-block;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container fade-up">
+        <a href="../index.html" class="nav-back">&larr; Back to Archive</a>
+        <div class="md-content">
+            <h1>The Mode That Never Corrects Itself: Bridging Analog Physics and Digital Verification</h1>
+<p><strong>Date:</strong> July 2026<br><strong>Subject:</strong> Mixed-Signal Design Verification (MSDV) and SiliconForge</p>
+<p>When verifying complex mixed-signal systems, digital Verification Engineers rely heavily on Discrete-Event Simulation (like standard UVM environments) and Real-Number Models (RNMs). They are fast and scale well to massive continuous integration (CI) pipelines.</p>
+<p>But they hide a fundamental physical flaw.</p>
+<p>In a free-running oscillator (like an LC VCO), there is a structural quirk that breaks standard digital assumptions: the limit cycle is <strong>translation-invariant in time</strong>. This means that if you nudge the <em>amplitude</em> of an oscillator, the circuit&#39;s nonlinearity fights back, damping the perturbation until the system returns to its steady-state limit cycle. But if you nudge the <em>phase</em>, nothing fights back. The oscillator accepts the new phase and continues forever. </p>
+<p>Mathematically, if you compute the state transition matrix (the monodromy matrix) over one period, exactly one of its eigenvalues (Floquet multipliers) sits squarely on <code>1.0</code>.</p>
+<p>This is the mode that never corrects itself. And it is the entire reason phase noise exists.</p>
+<h2>The Heuristic Noise Fallacy</h2>
+<p>In traditional UVM environments, when an engineer wants to model &quot;noise&quot; in a PLL or ADC, they typically inject arbitrary Gaussian jitter into their digital clock edges. </p>
+<p>This is mathematically unsound. Noise in a nonlinear analog circuit is not stationary; it is <strong>cyclostationary</strong>. An impulse of thermal noise hitting the transistor at the zero-crossing (maximum $dV/dt$) causes a massive, permanent phase shift. The exact same impulse hitting the transistor at its voltage peak (zero $dV/dt$) causes almost no phase shift at all, absorbing into the amplitude and decaying away.</p>
+<pre><code class="language-mermaid">flowchart TD
+    A[Thermal Noise Impulse] --&gt; B{Where in the cycle?}
+    B --&gt;|Zero-Crossing (Max dV/dt)| C[Permanent Phase Shift]
+    B --&gt;|Voltage Peak (Min dV/dt)| D[Amplitude Shift]
+    D --&gt; E[Decays Back to Limit Cycle]
+</code></pre>
+<h2>The SiliconForge Solution</h2>
+<p>To accurately map this continuous-time physics into a discrete-event digital verification environment, I built <strong>SiliconForge</strong>. </p>
+<p>Instead of guessing a noise distribution, SiliconForge explicitly extracts the <strong>Perturbation Projection Vector (PPV)</strong> from a transient SPICE simulation. The PPV definitively calculates how charge injected at different phases of an oscillation causes varying temporal deviations ($\Delta t$).</p>
+<h3>From Physics to SystemVerilog</h3>
+<p>Once the PPV matrix is extracted using the Python core, SiliconForge utilizes a Jinja2 AST engine to translate these nonlinear matrices into deterministic SystemVerilog constraints and UVM <code>covergroup</code> models. </p>
+<p>This bridges the gap. The digital regression now runs with the exact jitter histogram fidelity of a multi-hour SPICE simulation, but it executes in seconds.</p>
+<h2>A Live Digital Constraint: The Phase-Safe Window</h2>
+<p>The ultimate proof of this framework came during the integration of a varactorless VCO.</p>
+<p>Because we know the exact shape of the Impulse Sensitivity Function (ISF), we know exactly when the oscillator is immune to phase shifts (at the voltage peaks). By gating our digital retuning updates—the switched-cap tuning word—to fire <em>only</em> inside a narrow window around these voltage peaks, the switching transient lands almost entirely in the amplitude direction.</p>
+<p>In the final integration, SiliconForge was used to generate a live <code>ppv_violation_flag</code> inside a running digital control loop (an AFC/AAC finite state machine). </p>
+<p>During a simulated heavy AI inference workload burst, the digital testbench actively flagged any retuning update that fell outside the physical phase-safe window calculated by the SPICE solver. </p>
+<p><em>SiliconForge isn&#39;t just an offline noise calculator; it is an active, deterministic constraint engine bridging analog reality with digital speed.</em></p>
+
+        </div>
+    </div>
+</body>
+</html>

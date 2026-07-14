@@ -348,3 +348,30 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
+/* Custom Additions for Personal Blog Style */
+.project-list {
+    list-style: none;
+    margin-left: 0;
+}
+.project-list li {
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    background-color: var(--bg-secondary);
+}
+.project-list li strong {
+    font-size: 1.1rem;
+    color: var(--text-emphasis);
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+.video-container {
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+.mt-2 {
+    margin-top: 2rem;
+}

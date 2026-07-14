@@ -3,190 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hosakota Ganesh Kumara | Hardware Engineering Archive</title>
-    <meta name="description" content="Engineering archive and case studies of Hosakota Ganesh Kumara.">
+    <title>Ganesh Kumara | Human First, Engineer Second</title>
+    <meta name="description" content="Personal blog, brain dumps, and occasional engineering case studies of Hosakota Ganesh Kumara.">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <nav id="navbar">
         <div class="nav-container">
-            <div class="logo">HGK_ARCHIVE</div>
+            <div class="logo">~/ganesh_kumara $</div>
             <ul class="nav-links">
-                <li><a href="#about">Context</a></li>
-                <li><a href="#case-studies">Case Studies</a></li>
-                <li><a href="#notebook">Laboratory Notebook</a></li>
-                <li><a href="resume.pdf" target="_blank">Resume [PDF]</a></li>
+                <li><a href="#about">whoami</a></li>
+                <li><a href="#articles">brain_dumps</a></li>
+                <li><a href="#videos">logs.mp4</a></li>
+                <li><a href="#projects">boring_projects</a></li>
+                <li><a href="#contact">ping</a></li>
             </ul>
         </div>
     </nav>
 
     <main>
-        <section id="hero" class="hero container fade-up">
-            <h1>Hosakota Ganesh Kumara</h1>
+        <!-- Intro / About Section -->
+        <section id="about" class="hero container fade-up">
+            <h1>Hi, I'm Ganesh Kumara.</h1>
             <p class="hero-tagline">
-                Low-latency, deterministic hardware-software co-design. I architect complex hardware systems from high-performance RTL datapaths to the zero-allocation middleware that controls them.
+                I'm a human being who occasionally convinces rocks to think by trapping lightning inside them (also known as Hardware Engineering).
             </p>
-            <div class="hero-cta">
-                <a href="#case-studies" class="btn btn-primary">Review Case Studies</a>
-                <a href="mailto:hosakotaganeshkumara.me@gmail.com" class="btn">Initiate Contact</a>
-            </div>
-        </section>
-
-        <section id="about" class="container fade-up">
-            <div class="abstract-block">
-                <div class="abstract-title">Engineering Philosophy</div>
-                <p>I approach engineering with the philosophy that documentation, verification, and deterministic constraints should be as rigorous as the system itself. I do not build generic software; I engineer artifacts bound by the hard physical constraints of clock cycles, memory bandwidth, and silicon area.</p>
+            
+            <div class="abstract-block mt-2">
+                <div class="abstract-title">STATUS CODE: 200 OK</div>
+                <p>Welcome to my personal corner of the web. I'm currently a Research Intern at Bharat5G Labs (IIITDM Kurnool), pursuing my B.Tech in ECE (Expected 2027). When I'm not fighting with C11 compilers, attempting to write zero-allocation middleware, or staring intensely at Vivado timing reports hoping the red text turns green, I enjoy writing down my thoughts and making videos.</p>
                 
-                <p style="margin-bottom: 0;"><strong>Current Status:</strong> Research Intern at Bharat5G Labs (IIITDM Kurnool). Investigating hardware acceleration and packet-processing architectures for low-latency networking. B.Tech (Honors) ECE Expected June 2027.</p>
+                <p>I believe that engineering is cool, but being able to laugh at your own segfaults is cooler. This site is a collection of my brain dumps, random tech explorations, and, at the very bottom, my actual serious engineering work (so recruiters don't think I'm completely useless).</p>
+            </div>
+            
+            <div class="hero-cta">
+                <a href="#articles" class="btn btn-primary">Read my thoughts</a>
+                <a href="resume.pdf" target="_blank" class="btn">View Resume (If you must)</a>
             </div>
         </section>
 
-        <section id="case-studies" class="container fade-up">
-            <h2>Engineering Case Studies</h2>
-            <p>An audit of core architectures, explicit bottlenecks, and the structural trade-offs implemented to achieve deterministic performance.</p>
-
-            <!-- Case Study: HA-TFF -->
-            <article class="case-study">
-                <div class="case-header">
-                    <h3 class="case-title">HA-TFF: Hardware-Accelerated Telemetry Firewall</h3>
-                    <div class="case-links">
-                        <a href="project_docs/ha-tff/README.html">[README]</a>
-                        <a href="project_docs/ha-tff/architecture.html">[ARCHITECTURE.MD]</a>
-                    </div>
-                </div>
-                <div class="case-body">
-                    <div class="case-section">
-                        <div class="case-section-title">The Engineering Bottleneck</div>
-                        <p>Line-rate 100GbE processing requires evaluating minimum-size (64-byte) frames every 6.72 nanoseconds. Software stacks fail entirely at this inter-packet arrival constraint.</p>
-                    </div>
-                    <div class="case-section">
-                        <div class="case-section-title">The Architecture</div>
-                        <p>A pure-RTL, 16-cycle exact-match datapath firewall targeting FPGAs. Utilizes a 512-bit AXI4-Stream bus for combinatorial header extraction, eliminating the need for complex state machines or byte-by-byte buffering.</p>
-                    </div>
-                    <div class="case-section">
-                        <div class="case-section-title">Structural Trade-offs</div>
-                        <p>I implemented 4-way parallel BRAM lookups using Cuckoo Hashing to guarantee <code>O(1)</code> exact-match lookup time, deliberately accepting a 48-block BRAM utilization cost over a slower linked-list collision resolution mechanism. I also maintained a strict zero-DSP footprint to maximize cross-platform portability across Xilinx families.</p>
-                    </div>
-                    <div class="metrics-grid">
-                        <div class="metric-item">
-                            <span class="metric-val">156.25 MHz</span>
-                            <span class="metric-label">Timing Closure (Artix-7)</span>
-                        </div>
-                        <div class="metric-item">
-                            <span class="metric-val">16 Cycles</span>
-                            <span class="metric-label">Datapath Latency</span>
-                        </div>
-                        <div class="metric-item">
-                            <span class="metric-val">0 DSPs</span>
-                            <span class="metric-label">Compute Footprint</span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Case Study: EDP Middleware -->
-            <article class="case-study">
-                <div class="case-header">
-                    <h3 class="case-title">EDP: Embedded Design Platform Middleware</h3>
-                    <div class="case-links">
-                        <a href="project_docs/edp-middleware/README.html">[README]</a>
-                        <a href="project_docs/edp-middleware/architecture.html">[ARCHITECTURE.MD]</a>
-                    </div>
-                </div>
-                <div class="case-body">
-                    <div class="case-section">
-                        <div class="case-section-title">The Engineering Bottleneck</div>
-                        <p>Tightly-coupled data planes in modern cyber-physical systems (like drones) exhibit <code>O(N²)</code> complexity as new protocols (MAVLink, ROS2) are added. Memory copying across these monolithic bounds induces critical latency spikes.</p>
-                    </div>
-                    <div class="case-section">
-                        <div class="case-section-title">The Architecture</div>
-                        <p>A deterministic, zero-copy IPC C11 middleware designed to separate protocol logic from transport layers. It utilizes shared memory and pointer passing via highly synchronized ring buffers to achieve zero-allocation hot paths.</p>
-                    </div>
-                    <div class="case-section">
-                        <div class="case-section-title">Structural Trade-offs</div>
-                        <p>To prevent context-switching overhead in the critical path, I implemented lock-free atomics rather than standard POSIX mutex synchronization. This increased implementation complexity but guaranteed deterministically bounded IPC latency across embedded targets.</p>
-                    </div>
-                    <div class="metrics-grid">
-                        <div class="metric-item">
-                            <span class="metric-val">Zero-Copy</span>
-                            <span class="metric-label">IPC Payload Transfer</span>
-                        </div>
-                        <div class="metric-item">
-                            <span class="metric-val">O(1)</span>
-                            <span class="metric-label">Memory Allocation</span>
-                        </div>
-                        <div class="metric-item">
-                            <span class="metric-val">Lock-free</span>
-                            <span class="metric-label">Concurrency Model</span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Case Study: SiliconForge -->
-            <article class="case-study">
-                <div class="case-header">
-                    <h3 class="case-title">SiliconForge: Analog-to-UVM EDA Engine</h3>
-                    <div class="case-links">
-                        <a href="project_docs/siliconforge/README.html">[README]</a>
-                        <a href="project_docs/siliconforge/architecture.html">[ARCHITECTURE.MD]</a>
-                    </div>
-                </div>
-                <div class="case-body">
-                    <div class="case-section">
-                        <div class="case-section-title">The Engineering Bottleneck</div>
-                        <p>Transient analog SPICE simulation is exceptionally slow, prohibiting exhaustive digital regressions. However, standard heuristic noise injection in digital simulations is mathematically unsound for non-linear distortion (e.g., PLL phase noise).</p>
-                    </div>
-                    <div class="case-section">
-                        <div class="case-section-title">The Architecture</div>
-                        <p>An experimental Python-based EDA tool utilizing Jinja2 AST templating to extract SPICE numerical matrices (Perturbation Projection Vectors) and translate them into deterministic SystemVerilog/UVM constraint models and coverage groups.</p>
-                    </div>
-                    <div class="case-section">
-                        <div class="case-section-title">Structural Trade-offs</div>
-                        <p>Replaced continuous-time dynamic simulation with static functional coverage metrics bound by Periodic Steady State (PSS) waveforms. This trades raw physical resolution for mathematical determinism and integration into high-velocity CI/CD pipelines.</p>
-                    </div>
-                    <div class="metrics-grid">
-                        <div class="metric-item">
-                            <span class="metric-val">Exact Match</span>
-                            <span class="metric-label">Jitter Histogram Fidelity</span>
-                        </div>
-                        <div class="metric-item">
-                            <span class="metric-val">Jinja2</span>
-                            <span class="metric-label">AST Generation</span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        </section>
-
-        <section id="notebook" class="container fade-up">
-            <h2>Laboratory Notebook</h2>
-            <p style="margin-bottom: 2rem; color: var(--text-secondary);">Public-facing documentation of complex debugging scenarios, architectural philosophies, and theory applied to practice.</p>
+        <!-- Articles / Brain Dumps -->
+        <section id="articles" class="container fade-up">
+            <h2>> ls -la ./brain_dumps/</h2>
+            <p style="margin-bottom: 2rem; color: var(--text-secondary);">Ramblings on tech, debugging nightmares, and philosophy applied to code.</p>
 
             <div class="notebook-entry">
-                <div class="notebook-meta"><span>THE DEBUGGING LOG</span> &bull; JUN 2026</div>
-                <h3 class="notebook-title">Resolving Setup Violations at 156.25 MHz in AXI4-Stream Parsing</h3>
-                <p class="notebook-excerpt">Tracing a critical path through a deep combinatorial block and isolating the logic utilizing Vivado timing reports. Detailed the pipeline register insertion methodology that resolved a -1.2ns slack without stalling the datapath.</p>
+                <div class="notebook-meta"><span>TECH THOUGHTS</span> &bull; LATEST</div>
+                <h3 class="notebook-title"><a href="blogs/01_the_mode_that_never_corrects_itself.html">The Mode That Never Corrects Itself</a></h3>
+                <p class="notebook-excerpt">Sometimes systems get stuck. Let's talk about it. (Click the title to read the full markdown dump).</p>
             </div>
 
             <div class="notebook-entry">
-                <div class="notebook-meta"><span>ARCHITECTURAL PHILOSOPHY</span> &bull; MAY 2026</div>
-                <h3 class="notebook-title">Why Deterministic C11 Beats High-Level Abstractions in Robotics</h3>
-                <p class="notebook-excerpt">An analysis of memory fragmentation and garbage collection penalties in UAV control systems. Arguing for explicit state management and static linking over dynamic payloads.</p>
-            </div>
-
-            <div class="notebook-entry">
-                <div class="notebook-meta"><span>THEORY-TO-PRACTICE</span> &bull; APR 2026</div>
-                <h3 class="notebook-title">Applying Floquet Theory to UVM Constraint Generation</h3>
-                <p class="notebook-excerpt">Translating the mathematics of oscillating circuits (Impulse Sensitivity Functions) into SystemVerilog constraints to mathematically guarantee regression fidelity.</p>
+                <div class="notebook-meta"><span>THE DEBUGGING LOG</span> &bull; DRAFT</div>
+                <h3 class="notebook-title">Why Deterministic C11 Beats High-Level Abstractions</h3>
+                <p class="notebook-excerpt">An upcoming post about memory fragmentation, garbage collection penalties, and why I refuse to dynamically allocate memory in embedded systems.</p>
             </div>
         </section>
 
+        <!-- Videos -->
+        <section id="videos" class="container fade-up">
+            <h2>> ./play_video.sh</h2>
+            <p style="margin-bottom: 2rem; color: var(--text-secondary);">Visual proof that I exist and occasionally speak.</p>
+            
+            <div class="video-container">
+                <iframe width="100%" height="450" src="https://www.youtube.com/embed/V8IzRLBoLHQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="border-radius: 6px; border: 1px solid var(--border-color);"></iframe>
+            </div>
+        </section>
+
+        <!-- Projects (Moved to Bottom) -->
+        <section id="projects" class="container fade-up">
+            <h2>> cd ../serious_engineering/</h2>
+            <p style="margin-bottom: 1rem; color: var(--text-secondary);">Okay, fine. Here is the actual hardcore hardware-software co-design stuff. Read at your own risk of boredom.</p>
+            
+            <ul class="project-list">
+                <li>
+                    <strong>HA-TFF: Hardware-Accelerated Telemetry Firewall</strong> <br>
+                    100GbE line-rate processing on FPGA. Zero DSPs used. 16-cycle datapath.<br>
+                    <a href="project_docs/ha-tff/README.html">[Read Project Doc]</a> &bull; <a href="project_docs/ha-tff/architecture.html">[View Architecture]</a>
+                </li>
+                <li>
+                    <strong>EDP: Embedded Design Platform Middleware</strong> <br>
+                    Deterministic, zero-copy IPC C11 middleware for robotics and UAVs.<br>
+                    <a href="project_docs/edp-middleware/README.html">[Read Project Doc]</a> &bull; <a href="project_docs/edp-middleware/architecture.html">[View Architecture]</a>
+                </li>
+                <li>
+                    <strong>SiliconForge: Analog-to-UVM EDA Engine</strong> <br>
+                    Python-based AST templating to translate SPICE matrices to SystemVerilog.<br>
+                    <a href="project_docs/siliconforge/README.html">[Read Project Doc]</a> &bull; <a href="project_docs/siliconforge/architecture.html">[View Architecture]</a>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Contact Info -->
+        <section id="contact" class="container fade-up" style="margin-bottom: 4rem;">
+            <h2>> ping ganesh</h2>
+            <div class="abstract-block">
+                <p>Want to talk about tech, complain about JavaScript, or hire me to build cool hardware stuff?</p>
+                <p style="margin-bottom: 0;">
+                    <strong>Email:</strong> <a href="mailto:hosakotaganeshkumara.me@gmail.com">hosakotaganeshkumara.me@gmail.com</a><br>
+                    <strong>GitHub:</strong> <a href="https://github.com/Ganeshkumara26" target="_blank">github.com/Ganeshkumara26</a>
+                </p>
+            </div>
+        </section>
     </main>
 
     <footer>
         <div class="container">
-            <p>HOSAKOTA GANESH KUMARA // ENGINEERING ARCHIVE</p>
+            <p>HOSAKOTA GANESH KUMARA // HUMAN & ENGINEER // EOF</p>
         </div>
     </footer>
 </body>

@@ -3,114 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ganesh Kumara | Human First, Engineer Second</title>
-    <meta name="description" content="Personal blog, brain dumps, and occasional engineering case studies of Hosakota Ganesh Kumara.">
+    <title>Ganesh Kumara</title>
+    <meta name="description" content="This is where I document things I'm learning, things I've built, and things I'm still trying to understand.">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav id="navbar">
-        <div class="nav-container">
-            <div class="logo">~/ganesh_kumara $</div>
+    <div class="container">
+        <nav>
             <ul class="nav-links">
-                <li><a href="#about">whoami</a></li>
-                <li><a href="#articles">brain_dumps</a></li>
-                <li><a href="#videos">logs.mp4</a></li>
-                <li><a href="#projects">boring_projects</a></li>
-                <li><a href="#contact">ping</a></li>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#writing">Writing</a></li>
+                <li><a href="#videos">Videos</a></li>
+                <li><a href="#built">Things I've Built</a></li>
+                <li><a href="#notes">Notes</a></li>
+                <li><a href="#photos">Photos</a></li>
+                <li><a href="mailto:hosakotaganeshkumara.me@gmail.com">Contact</a></li>
             </ul>
-        </div>
-    </nav>
+        </nav>
 
-    <main>
-        <!-- Intro / About Section -->
-        <section id="about" class="hero container fade-up">
-            <h1>Hi, I'm Ganesh Kumara.</h1>
-            <p class="hero-tagline">
-                I'm a human being who occasionally convinces rocks to think by trapping lightning inside them (also known as Hardware Engineering).
-            </p>
-            
-            <div class="abstract-block mt-2">
-                <div class="abstract-title">STATUS CODE: 200 OK</div>
-                <p>Welcome to my personal corner of the web. I'm currently a Research Intern at Bharat5G Labs (IIITDM Kurnool), pursuing my B.Tech in ECE (Expected 2027). When I'm not fighting with C11 compilers, attempting to write zero-allocation middleware, or staring intensely at Vivado timing reports hoping the red text turns green, I enjoy writing down my thoughts and making videos.</p>
+        <main>
+            <!-- Home / Intro -->
+            <section id="home" class="hero">
+                <h1>Hi.</h1>
+                <p>I'm Ganesh.</p>
+                <p>I study Electronics and Communication Engineering.</p>
+                <p>Most days you'll find me reading papers about oscillators, trying to understand why circuits misbehave, building FPGA projects that become much larger than they were supposed to be, or writing notes that eventually turn into entire books.</p>
+                <p>Outside engineering I enjoy old-film photography, long walks, devotional music, and occasionally writing about things completely unrelated to semiconductors.</p>
+                <p>This website is simply my notebook on the internet.</p>
                 
-                <p>I believe that engineering is cool, but being able to laugh at your own segfaults is cooler. This site is a collection of my brain dumps, random tech explorations, and, at the very bottom, my actual serious engineering work (so recruiters don't think I'm completely useless).</p>
-            </div>
+                <p class="intro-note">"This is where I document things I'm learning, things I've built, and things I'm still trying to understand."</p>
+                
+                <!-- INSERT CIRCUIT DOODLE HERE -->
+                <!-- <img src="doodle.png" alt="A small circuit doodle" class="doodle"> -->
+            </section>
+
+            <hr>
+
+            <!-- About -->
+            <section id="about">
+                <h2>About</h2>
+                <p>I grew up fascinated by physics and electronics.</p>
+                <p>Over time that curiosity drifted toward analog circuits, digital hardware, verification, and the software that connects them.</p>
+                <p>I like projects that sit at the intersection of mathematics, hardware and programming.</p>
+                <p>When I'm not debugging RTL or reading papers, I enjoy old-film photography, devotional music, and collecting interesting books.</p>
+                <p>This website exists because I wanted one place where I could publish everything I'm learning.</p>
+                
+                <br>
+                <h3>Currently Reading</h3>
+                <ul class="clean-list" style="margin-top: 1rem;">
+                    <li><p>Razavi CMOS</p></li>
+                    <li><p>Hajimiri papers</p></li>
+                    <li><p>Gödel, Escher, Bach</p></li>
+                    <li><p>The C Programming Language</p></li>
+                </ul>
+            </section>
+
+            <hr>
+
+            <!-- Writing -->
+            <section id="writing">
+                <h2>Writing</h2>
+                <ul class="clean-list">
+                    <li>
+                        <h3><a href="blogs/01_the_mode_that_never_corrects_itself.html">The Mode That Never Corrects Itself</a></h3>
+                        <p>Sometimes systems get stuck. A look at when logic goes wrong.</p>
+                    </li>
+                    <li>
+                        <h3>How I accidentally built a 9-stage RF analysis pipeline</h3>
+                        <p>A classic tale of scope creep in analog design.</p>
+                    </li>
+                    <li>
+                        <h3>Why packet parsers are harder than they look</h3>
+                        <p>Thoughts on network hardware and protocol state machines.</p>
+                    </li>
+                    <li>
+                        <h3>Notes from GATE preparation</h3>
+                        <p>Documenting the things I had to learn the hard way.</p>
+                    </li>
+                </ul>
+            </section>
+
+            <hr>
+
+            <!-- Videos -->
+            <section id="videos">
+                <h2>Videos</h2>
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/V8IzRLBoLHQ" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+            </section>
+
+            <hr>
+
+            <!-- Notes -->
+            <section id="notes">
+                <h2>Random Notes</h2>
+                <ul class="clean-list">
+                    <li>
+                        <h3>Today I learned...</h3>
+                        <p>Phase noise isn't just jitter in the frequency domain. It's a completely different way to think about how energy smears across a spectrum when you build a real oscillator instead of an ideal math model.</p>
+                    </li>
+                </ul>
+            </section>
             
-            <div class="hero-cta">
-                <a href="#articles" class="btn btn-primary">Read my thoughts</a>
-                <a href="resume.pdf" target="_blank" class="btn">View Resume (If you must)</a>
-            </div>
-        </section>
+            <hr>
 
-        <!-- Articles / Brain Dumps -->
-        <section id="articles" class="container fade-up">
-            <h2>> ls -la ./brain_dumps/</h2>
-            <p style="margin-bottom: 2rem; color: var(--text-secondary);">Ramblings on tech, debugging nightmares, and philosophy applied to code.</p>
+            <!-- Things I've Built -->
+            <section id="built">
+                <h2>Things I've Built</h2>
+                <ul class="clean-list">
+                    <li>
+                        <h3><a href="project_docs/siliconforge/README.html">SiliconForge (OscillatorLab)</a></h3>
+                        <p>Building tools for analog characterization.</p>
+                        <a href="project_docs/siliconforge/README.html" class="read-more">Read &rarr;</a>
+                    </li>
+                    <li>
+                        <h3>Digital Clock Architecture</h3>
+                        <p>Honors project on AFC/AAC/ADPLL.</p>
+                        <a href="#" class="read-more">Read &rarr;</a>
+                    </li>
+                    <li>
+                        <h3><a href="project_docs/ha-tff/README.html">HA-TFF</a></h3>
+                        <p>Hardware packet classification on FPGA.</p>
+                        <a href="project_docs/ha-tff/README.html" class="read-more">Read &rarr;</a>
+                    </li>
+                    <li>
+                        <h3><a href="project_docs/edp-middleware/README.html">EDP</a></h3>
+                        <p>Deterministic telemetry middleware.</p>
+                        <a href="project_docs/edp-middleware/README.html" class="read-more">Read &rarr;</a>
+                    </li>
+                </ul>
+            </section>
 
-            <div class="notebook-entry">
-                <div class="notebook-meta"><span>TECH THOUGHTS</span> &bull; LATEST</div>
-                <h3 class="notebook-title"><a href="blogs/01_the_mode_that_never_corrects_itself.html">The Mode That Never Corrects Itself</a></h3>
-                <p class="notebook-excerpt">Sometimes systems get stuck. Let's talk about it. (Click the title to read the full markdown dump).</p>
-            </div>
+            <hr>
 
-            <div class="notebook-entry">
-                <div class="notebook-meta"><span>THE DEBUGGING LOG</span> &bull; DRAFT</div>
-                <h3 class="notebook-title">Why Deterministic C11 Beats High-Level Abstractions</h3>
-                <p class="notebook-excerpt">An upcoming post about memory fragmentation, garbage collection penalties, and why I refuse to dynamically allocate memory in embedded systems.</p>
-            </div>
-        </section>
+            <!-- Photos -->
+            <section id="photos">
+                <h2>Photos</h2>
+                <p>I enjoy old-film photography. Someday I'll put landscapes, college, temples, rain, and old streets here. Nothing fancy.</p>
+                <!-- INSERT PHOTOS HERE -->
+            </section>
+        </main>
 
-        <!-- Videos -->
-        <section id="videos" class="container fade-up">
-            <h2>> ./play_video.sh</h2>
-            <p style="margin-bottom: 2rem; color: var(--text-secondary);">Visual proof that I exist and occasionally speak.</p>
-            
-            <div class="video-container">
-                <iframe width="100%" height="450" src="https://www.youtube.com/embed/V8IzRLBoLHQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="border-radius: 6px; border: 1px solid var(--border-color);"></iframe>
-            </div>
-        </section>
-
-        <!-- Projects (Moved to Bottom) -->
-        <section id="projects" class="container fade-up">
-            <h2>> cd ../serious_engineering/</h2>
-            <p style="margin-bottom: 1rem; color: var(--text-secondary);">Okay, fine. Here is the actual hardcore hardware-software co-design stuff. Read at your own risk of boredom.</p>
-            
-            <ul class="project-list">
-                <li>
-                    <strong>HA-TFF: Hardware-Accelerated Telemetry Firewall</strong> <br>
-                    100GbE line-rate processing on FPGA. Zero DSPs used. 16-cycle datapath.<br>
-                    <a href="project_docs/ha-tff/README.html">[Read Project Doc]</a> &bull; <a href="project_docs/ha-tff/architecture.html">[View Architecture]</a>
-                </li>
-                <li>
-                    <strong>EDP: Embedded Design Platform Middleware</strong> <br>
-                    Deterministic, zero-copy IPC C11 middleware for robotics and UAVs.<br>
-                    <a href="project_docs/edp-middleware/README.html">[Read Project Doc]</a> &bull; <a href="project_docs/edp-middleware/architecture.html">[View Architecture]</a>
-                </li>
-                <li>
-                    <strong>SiliconForge: Analog-to-UVM EDA Engine</strong> <br>
-                    Python-based AST templating to translate SPICE matrices to SystemVerilog.<br>
-                    <a href="project_docs/siliconforge/README.html">[Read Project Doc]</a> &bull; <a href="project_docs/siliconforge/architecture.html">[View Architecture]</a>
-                </li>
-            </ul>
-        </section>
-
-        <!-- Contact Info -->
-        <section id="contact" class="container fade-up" style="margin-bottom: 4rem;">
-            <h2>> ping ganesh</h2>
-            <div class="abstract-block">
-                <p>Want to talk about tech, complain about JavaScript, or hire me to build cool hardware stuff?</p>
-                <p style="margin-bottom: 0;">
-                    <strong>Email:</strong> <a href="mailto:hosakotaganeshkumara.me@gmail.com">hosakotaganeshkumara.me@gmail.com</a><br>
-                    <strong>GitHub:</strong> <a href="https://github.com/Ganeshkumara26" target="_blank">github.com/Ganeshkumara26</a>
-                </p>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>HOSAKOTA GANESH KUMARA // HUMAN & ENGINEER // EOF</p>
-        </div>
-    </footer>
+        <footer>
+            <p>Hosakota Ganesh Kumara</p>
+        </footer>
+    </div>
 </body>
 </html>
